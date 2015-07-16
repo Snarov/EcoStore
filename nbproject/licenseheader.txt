@@ -1,0 +1,9 @@
+<#if licenseFirst??>
+${licenseFirst}
+</#if>
+${licensePrefix}ООО "ТК ЭЛЬДОРАДО"
+${licensePrefix}Витебск 2015${licensePrefix}
+${licensePrefix}Автор: Снаров И.А.
+<#if licenseLast??>
+${licenseLast}
+</#if>
