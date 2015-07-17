@@ -28,16 +28,19 @@ class ManufacturerBuilder implements iObjectBuilder {
 		foreach ($objects as $object) {
 			if (property_exists($object, 'virtuemart_manufacturer_id') && property_exists($object, 'mf_name') &&
 					property_exists($object, 'mf_url')) {
-				
-				$country = '';
-				if(preg_match('/\([^\W\d]+\)/', $object->mf_name, $matches) === 1){
+
+				global $translit;
+
+				if (preg_match('/\([^\W\d]+\)/', $object->slug, $matches) === 1) {
 					$country = $matches[0];
+				} else {
+					$country = '';
 				}
-				
+
+				$country = strtr($country, array_flip($translit));
 				$retval[] = new Manufacturer($object->virtuemart_manufacturer_id, $object->mf_name, $country, $object->mf_url);
 			}
 		}
-		
 		return $retval;
 	}
 
