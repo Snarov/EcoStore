@@ -35,7 +35,7 @@ abstract class Reader {
 	 */
 	function read($fileName) {
 		$this->fileText = file_get_contents($fileName);
-		$this->fileText = strip_tags($this->fileText);
+		//$this->fileText = strip_tags($this->fileText);
 	}
 
 	/**

@@ -24,6 +24,7 @@
  * @property-read string $inType
  * @property-read string $outType
  * @property-read string $outFileName
+ * @property-read string $descFileName
  * @property-read string $imagesDir
  * @property-read bool $dataCorrectionOn Режим корректирования входных данных может потребоваться в будущем
  */
@@ -35,6 +36,7 @@ class ScriptParams {
 	const OPTIONS = array(
 		'i:' => 'input:',
 		'o:' => 'output:',
+		'w:' => 'woutput',
 		's:' => 'itype:',
 		'f:' => 'otype:',
 		'c::' => 'correction::'
@@ -74,7 +76,8 @@ EOT;
 	private $inType = "JSON";
 	private $outType = "xlsx";
 	private $outFileName = "EcoStoreTable.xlsx";
-	private $imagesDir;
+	private $descFileName = "EcoStoreDescriptions.docx";
+	private $imagesDir = 'data/images';
 	private $dataCorrectionOn = false;
 
 	function __construct() {
@@ -115,6 +118,12 @@ EOT;
 			$this->outFileName = $params['o'];
 		} else if (!empty($params['output'])) {
 			$this->outFileName = $params['output'];
+		}
+		
+		if (!empty($params['w'])) {
+			$this->descFileName = $params['w'];
+		} else if (!empty($params['woutput'])) {
+			$this->descFileName = $params['woutput'];
 		}
 
 		if (!empty($params['f'])) {

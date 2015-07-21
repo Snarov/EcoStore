@@ -71,8 +71,11 @@ class ProductBuilder {
 				$product = new Product($object->virtuemart_product_id);
 
 				$product->name = $object->product_name;
-				$product->shortDescr = $object->product_s_desc;
-				$product->fullDescr = $object->product_desc;
+				$product->shortDescr = strip_tags($object->product_s_desc);
+				$product->fullDescr = preg_replace('/<img.*>/', '', $object->product_desc);
+				if(strpos($product->fullDescr, "<img")){
+					echo 'lol';
+				}
 
 				//ищем объект связанной категории
 				$categoryBind = findByProperty($productCategoryBinds, $categoryBindParentFieldName,	$product->id);

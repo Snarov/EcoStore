@@ -19,7 +19,8 @@ class WriterFactory {
 	 * @var string[] отображение, связывающее типы выходных файлов и Writer'ы для их чтения
 	 */
 	const MAP = array(
-		"xlsx" => "XLSXWriter"
+		"xlsx" => "XLSXWriter",
+		"docx" => "DOCXWriter"
 	);
 	
 	/**

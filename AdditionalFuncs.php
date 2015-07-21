@@ -6,7 +6,10 @@
  * Автор: Снаров И.А.
  */
 
-//Файл содержит дополнительные функции, необходимые для работы скрипта, которые не вошли ни в один класс
+/**
+ * @file
+ * Файл содержит дополнительные функции, необходимые для работы скрипта, которые не вошли ни в один класс
+ */
 
 /**
  * Ищет в массиве объектов объект по значению свойства, заданного его именем. Для корректного выполнения функции
@@ -76,58 +79,160 @@ function getPropertyNameByNum($object, $propertyNum) {
 	return $propertyName;
 }
 
-/** 
+/**
+ * Многовбайтовый аналог substr_replace()
+ * Позаимствовано с php.net. Примем на веру, то что функция работает
+ */
+if (!function_exists("mb_substr_replace")) {
+
+	function mb_substr_replace($string, $replacement, $start, $length = null, $encoding = null) {
+		if ($encoding == null) {
+			$encoding = mb_internal_encoding();
+		}
+		if ($length == null) {
+			return mb_substr($string, 0, $start, $encoding) . $replacement;
+		} else {
+			if ($length < 0)
+				$length = mb_strlen($string, $encoding) - $start + $length;
+			return
+					mb_substr($string, 0, $start, $encoding) .
+					$replacement .
+					mb_substr($string, $start + $length, mb_strlen($string, $encoding), $encoding);
+		}
+	}
+
+}
+
+/**
+ * Производит расстановку переносов в строке
+ * 
+ * @param string $str Строка, в которой расставляются переносы
+ * @param int $maxLen Максимальное количество символов в строке
+ * 
+ * @retval string Строка, с расставленными переносами. Если length неположительный, то возвращает неизмененную строку
+ */
+function placeLineBreaks($str, $maxLen) {
+	// функция ищет пробел, котороый отдален от начала очередной строки как можно дальше но но не дальше чем на $maxlen и
+	// заменяет его символом перевода строки
+
+	if ($maxLen > 0) {
+		$prevSpacePos = 0;
+		$lastNewLinePos = -1;
+//		$newLinesCount = 0;
+
+		while (true) {
+
+			$lastSpacePos = mb_strpos($str, ' ', $prevSpacePos + 1);
+
+			if ($lastSpacePos !== false) {
+				if ($lastSpacePos - $lastNewLinePos - 1 > $maxLen) {
+
+					$str = mb_substr_replace($str, "\n", $prevSpacePos, 1);
+					$lastNewLinePos = $prevSpacePos;
+				}
+
+				$prevSpacePos = $lastSpacePos;
+			} else {
+				if (mb_strlen($str) - $lastNewLinePos - 1 > $maxLen) {
+					$str = mb_substr_replace($str, "\n", $prevSpacePos, 1);
+				}
+				break;
+			}
+		}
+	}
+
+	return $str;
+}
+
+/**
+ * Computes base root, base path, and base url.
+ * 
+ * This code is adapted from Drupal function conf_init, see:
+ * http://api.drupal.org/api/drupal/includes%21bootstrap.inc/function/conf_init/6
+ * 
+ */
+function htmltodocx_paths() {
+
+	if (!isset($_SERVER['SERVER_PROTOCOL']) || ($_SERVER['SERVER_PROTOCOL'] != 'HTTP/1.0' && $_SERVER['SERVER_PROTOCOL'] != 'HTTP/1.1')) {
+		$_SERVER['SERVER_PROTOCOL'] = 'HTTP/1.0';
+	}
+
+	if (isset($_SERVER['HTTP_HOST'])) {
+		// As HTTP_HOST is user input, ensure it only contains characters allowed
+		// in hostnames. See RFC 952 (and RFC 2181).
+		// $_SERVER['HTTP_HOST'] is lowercased here per specifications.
+		$_SERVER['HTTP_HOST'] = strtolower($_SERVER['HTTP_HOST']);
+		if (!htmltodocx_valid_http_host($_SERVER['HTTP_HOST'])) {
+			// HTTP_HOST is invalid, e.g. if containing slashes it may be an attack.
+			header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
+			exit;
+		}
+	} else {
+		// Some pre-HTTP/1.1 clients will not send a Host header. Ensure the key is
+		// defined for E_ALL compliance.
+		$_SERVER['HTTP_HOST'] = '';
+	}
+
+	// Create base URL
+	$base_root = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'https' : 'http';
+
+	$base_url = $base_root .= '://' . $_SERVER['HTTP_HOST'];
+
+	// $_SERVER['SCRIPT_NAME'] can, in contrast to $_SERVER['PHP_SELF'], not
+	// be modified by a visitor.
+	if ($dir = trim(dirname($_SERVER['SCRIPT_NAME']), '\,/')) {
+		$base_path = "/$dir";
+		$base_url .= $base_path;
+		$base_path .= '/';
+	} else {
+		$base_path = '/';
+	}
+
+	return array(
+		'base_path' => $base_path,
+		'base_url' => $base_url,
+		'base_root' => $base_root,
+	);
+}
+
+/**
+ * Check for valid http host.
+ * 
+ * This code is adapted from function drupal_valid_http_host, see:
+ * http://api.drupal.org/api/drupal/includes%21bootstrap.inc/function/drupal_valid_http_host/6
+ * 
+ * @param mixed $host
+ * @return int
+ */
+function htmltodocx_valid_http_host($host) {
+	return preg_match('/^\[?(?:[a-z0-9-:\]_]+\.?)+$/', $host);
+}
+
+/**
  * @global array $translit
  * Таблица транслитерации ГОСТ 7.79-2000
  */
- $translit = array(
-   
-            'а' => 'a',   'б' => 'b',   'в' => 'v',
-  
-            'г' => 'g',   'д' => 'd',   'е' => 'e',
-  
-            'ё' => 'yo',   'ж' => 'zh',  'з' => 'z',
-  
-            'и' => 'i',   'й' => 'j',   'к' => 'k',
-  
-            'л' => 'l',   'м' => 'm',   'н' => 'n',
-  
-            'о' => 'o',   'п' => 'p',   'р' => 'r',
-  
-            'с' => 's',   'т' => 't',   'у' => 'u',
-  
-            'ф' => 'f',   'х' => 'x',   'ц' => 'c',
-  
-            'ч' => 'ch',  'ш' => 'sh',  'щ' => 'shh',
-  
-            'ь' => '\'',  'ы' => 'y',   'ъ' => '\'\'',
-  
-            'э' => 'e\'',   'ю' => 'yu',  'я' => 'ya',
-          
-  
-            'А' => 'A',   'Б' => 'B',   'В' => 'V',
-  
-            'Г' => 'G',   'Д' => 'D',   'Е' => 'E',
-  
-            'Ё' => 'YO',   'Ж' => 'Zh',  'З' => 'Z',
-  
-            'И' => 'I',   'Й' => 'J',   'К' => 'K',
-  
-            'Л' => 'L',   'М' => 'M',   'Н' => 'N',
-  
-            'О' => 'O',   'П' => 'P',   'Р' => 'R',
-  
-            'С' => 'S',   'Т' => 'T',   'У' => 'U',
-  
-            'Ф' => 'F',   'Х' => 'X',   'Ц' => 'C',
-  
-            'Ч' => 'CH',  'Ш' => 'SH',  'Щ' => 'SHH',
-  
-            'Ь' => '\'',  'Ы' => 'Y\'',   'Ъ' => '\'\'',
-  
-            'Э' => 'E\'',   'Ю' => 'YU',  'Я' => 'YA',
-  
-        );
-  
-      
-      
+$translit = array(
+	'а' => 'a', 'б' => 'b', 'в' => 'v',
+	'г' => 'g', 'д' => 'd', 'е' => 'e',
+	'ё' => 'yo', 'ж' => 'zh', 'з' => 'z',
+	'и' => 'i', 'й' => 'j', 'к' => 'k',
+	'л' => 'l', 'м' => 'm', 'н' => 'n',
+	'о' => 'o', 'п' => 'p', 'р' => 'r',
+	'с' => 's', 'т' => 't', 'у' => 'u',
+	'ф' => 'f', 'х' => 'x', 'ц' => 'ts',
+	'ч' => 'ch', 'ш' => 'sh', 'щ' => 'shh',
+	'ь' => '\'', 'ы' => 'y', 'ъ' => '\'\'',
+	'э' => 'e\'', 'ю' => 'yu', 'я' => 'ya',
+	'А' => 'A', 'Б' => 'B', 'В' => 'V',
+	'Г' => 'G', 'Д' => 'D', 'Е' => 'E',
+	'Ё' => 'YO', 'Ж' => 'Zh', 'З' => 'Z',
+	'И' => 'I', 'Й' => 'J', 'К' => 'K',
+	'Л' => 'L', 'М' => 'M', 'Н' => 'N',
+	'О' => 'O', 'П' => 'P', 'Р' => 'R',
+	'С' => 'S', 'Т' => 'T', 'У' => 'U',
+	'Ф' => 'F', 'Х' => 'X', 'Ц' => 'C',
+	'Ч' => 'CH', 'Ш' => 'SH', 'Щ' => 'SHH',
+	'Ь' => '\'', 'Ы' => 'Y\'', 'Ъ' => '\'\'',
+	'Э' => 'E\'', 'Ю' => 'YU', 'Я' => 'YA',
+);

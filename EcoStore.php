@@ -8,19 +8,26 @@
  * Автор: Снаров И.А.
  */
 
-set_include_path(get_include_path() . PATH_SEPARATOR . '/usr/local/lib/php/PHPExcel-1.8.0/Classes/' . 
-				PATH_SEPARATOR . __DIR__);	//подключаем библиотеку PHPExcell
-
 error_reporting(0); 
+
+
+//подключаем необходиые библиотеки
+set_include_path(get_include_path() . PATH_SEPARATOR .
+				'libs/PHPExcel-1.8.0/Classes/' . PATH_SEPARATOR .
+				'libs/phpword' . PATH_SEPARATOR .
+				'libs/simplehtmldom' . PATH_SEPARATOR . 
+				'libs/htmltodocx_converter' . PATH_SEPARATOR .
+				PATH_SEPARATOR . __DIR__);	
+
 
 //MESSAGES
 define('ERROR', 'Ошибка: '); // используется всеми уведомлениями об ошибках
-define('NOTICE', 'Уведомление :');
+define('NOTICE', 'Уведомление:');
 define('NO_READER', 'Reader отсутствует');
 define('NO_WRITER', 'Writer отсутствует');
-define('NO_MANUFACTURER', 'У товара не задан поставщик');
+define('NO_MANUFACTURER', 'У товара не задан производитель');
 define('NO_CATEGORY', 'У товара не задана категория');
-define('IMG_COPY_FAIL', 'Не удается найти файл');
+define('IMG_COPY_FAIL', 'Не удается скопировать файл');
 
 require_once 'ScriptParams.php';
 require_once 'Input/ReaderFactory.php';
@@ -30,6 +37,7 @@ require_once 'Input/CategoryBuilder.php';
 require_once 'Input/ImageBuilder.php';
 require_once 'Input/ProductBuilder.php';
 require_once 'Output/WriterFactory.php';
+require_once 'Output/DOCXDescWriter.php';
 
 use Input\ReaderFactory;
 use Input\ManufacturerBuilder;
@@ -100,13 +108,14 @@ $products = $productBuilder->buildAll(
 		$productPrices,
 		$productRawObjects);
 
-//Записываем все данный в файл
+
 if(!($writer = WriterFactory::getWriter($scriptParams->outType, $scriptParams->outFileName))){ //получаем Writer, соответствующий формату
 	exit(ERROR . "{$scriptParams->outType}: " . NO_WRITER);
 }
 
 $writer->write($products, $scriptParams->imagesDir, $outImagesDir);
 
-echo "Готово";
+$writer = new Output\DOCXDescWriter($scriptParams->descFileName);
+$writer->writeDesc($products);
 
 ?>
