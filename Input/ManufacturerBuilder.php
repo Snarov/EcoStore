@@ -33,15 +33,19 @@ class ManufacturerBuilder implements iObjectBuilder {
 
 				if (preg_match('/\([^\W\d]+\)/', $object->slug, $matches) === 1) {
 					$country = $matches[0];
+
 					$country = str_replace(array(')', '('), '', $country);
 					$country = ucwords($country);
 					$country = strtr($country, array_flip($translit));
-					
+
+					$country = strtr($country, array_flip($translit));
 				} else {
 					$country = '';
 				}
 
-				
+
+
+
 				$retval[] = new Manufacturer($object->virtuemart_manufacturer_id, $object->mf_name, $country, $object->mf_url);
 			}
 		}
