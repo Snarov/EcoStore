@@ -76,7 +76,12 @@ class ProductBuilder {
 				if(strpos($product->fullDescr, "<img")){
 					echo 'lol';
 				}
-
+				
+				if(preg_match('/,\s*\d+\s*(мг|мл|г|гр)\.?/', $product->name, $matches) === 1){
+					$product->name = preg_replace('/,\s*\d+\s*(мг|мл|г|гр)\.?/', '', $product->name);
+					$product->weight = str_replace(',', '', $matches[0]);
+				}
+				
 				//ищем объект связанной категории
 				$categoryBind = findByProperty($productCategoryBinds, $categoryBindParentFieldName,	$product->id);
 		 		

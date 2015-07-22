@@ -95,6 +95,7 @@ class XLSXWriter extends ProductsWriter {
 //записываем информацию о товарах 
 		$activeSheet->getStyle('A1:K' . (count($products) + 1))->getAlignment()->setWrapText(true);
 		
+		mkdir($imagesOutDir);
 		foreach ($products as $index => $product) {
 			$activeSheet->setCellValue('A' . ($index + 2), $index + 1); //Номер товара
 			$activeSheet->setCellValue('B' . ($index + 2), 1); // Тип товара
@@ -104,10 +105,9 @@ class XLSXWriter extends ProductsWriter {
 			$activeSheet->setCellValue('E' . ($index + 2), $product->name); // Название 
 			$activeSheet->setCellValue('F' . ($index + 2), $product->ingredients); // Состав
 			$activeSheet->setCellValue('G' . ($index + 2), $product->shortDescr); // Краткое описание
-			$activeSheet->setCellValue('H' . ($index + 2), ''); // Полное описание
-			$activeSheet->setCellValue('I' . ($index + 2), $product->keywords); // Ключевые слова
-			$activeSheet->setCellValue('J' . ($index + 2), $product->price); // Цена
-			$activeSheet->setCellValue('K' . ($index + 2), $product->sale); // Скидка
+			$activeSheet->setCellValue('H' . ($index + 2), $product->keywords); // Ключевые слова
+			$activeSheet->setCellValue('I' . ($index + 2), $product->price); // Цена
+			$activeSheet->setCellValue('J' . ($index + 2), $product->weight); // вес
 
 			$this->writeImages($product, $index + 1, $imagesInDir, $imagesOutDir);
 			

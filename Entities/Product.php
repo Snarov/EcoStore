@@ -24,7 +24,7 @@ require_once 'Entity.php';
  * @property string $fullDescr
  * @property string $keywords
  * @property int $price
- * @property float $sale
+ * @property float $weight
  * @property-read Image[] $images;
  * @property-read ProductSpecs $otherSpecs возможно понадобятся в будущем
  */
@@ -38,7 +38,7 @@ class Product extends Entity {
 	private $fullDescr;
 	private $keywords;
 	private $price;
-	private $sale;
+	private $weight;
 	private $images = array();
 	private $otherSpecs;
 

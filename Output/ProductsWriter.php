@@ -8,16 +8,20 @@
 
 namespace Output;
 
+require_once 'libs/SimpleImage.php';
+
 /**
- *Класс, наследуемый классами, которые производят запись выходных данных о товарах в файл
+ * Класс, наследуемый классами, которые производят запись выходных данных о товарах в файл
  *
  * @author snarov
  * @package \Output
  */
-abstract class ProductsWriter extends Writer{
+abstract class ProductsWriter extends Writer {
+
 	/**
-	 * перемещает картинки товара в папку images  и переимновывает их. (имя файла :
-	 * номер_товара-порядковый_номер_картинки.jpg (png, gif))
+	 * перемещает картинки товара в папку images  и переимновывает их, а так же изменяет их размер так, чтобы они были квадратными.
+	 * Сторона квадрата выходной картинки равна длине наибольшей стороны исходной картинки.
+	 * . (имя файла : номер_товара-порядковый_номер_картинки.jpg (png, gif))
 	 * 
 	 * @param Product $product
 	 * @param int $productNum
@@ -26,14 +30,16 @@ abstract class ProductsWriter extends Writer{
 	 */
 	protected function writeImages($product, $productNum, $inDir, $outDir) {
 
-		mkdir($outDir);
 		foreach ($product->images as $index => $image) {
 
-			$tmpArr = explode('.', $image->path);
-			$formatName = $tmpArr[count($tmpArr) - 1];
-			
+			$extension = strrchr($image->path, '.');
 
-			if (!copy("$inDir/{$image->path}", "$outDir/" . sprintf("%d-%d.%s", $productNum, $index + 1, $formatName))) {
+			$simpleImage = new \SimpleImage();
+			$simpleImage->load("$inDir/{$image->path}");
+			if ($simpleImage->image) {
+				$simpleImage->toSquare();
+				$simpleImage->save("$outDir/" . sprintf("%d-%d%s", $productNum, $index + 1, $extension),$simpleImage->image_type);
+			}else{
 				echo NOTICE . " {$image->path}: " . IMG_COPY_FAIL . "\n";
 			}
 		}
