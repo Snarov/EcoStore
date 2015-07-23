@@ -78,7 +78,7 @@ class ProductBuilder {
 				}
 				
 				if(preg_match('/,\s*\d+\s*(мг|мл|г|гр)\.?/', $product->name, $matches) === 1){
-					$product->name = preg_replace('/,\s*\d+\s*(мг|мл|г|гр)\.?/', '', $product->name);
+//					$product->name = preg_replace('/,\s*\d+\s*(мг|мл|г|гр)\.?/', '', $product->name);
 					$product->weight = str_replace(',', '', $matches[0]);
 				}
 				

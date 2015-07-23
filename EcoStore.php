@@ -8,8 +8,10 @@
  * Автор: Снаров И.А.
  */
 
-error_reporting(0); 
+//error_reporting(0); 
 
+//обработка изображений высокого разрешения требует больше памяти
+ini_set('memory_limit', '512M');
 
 //подключаем необходиые библиотеки
 set_include_path(get_include_path() . PATH_SEPARATOR .
