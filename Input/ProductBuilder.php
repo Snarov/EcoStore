@@ -37,92 +37,78 @@ class ProductBuilder {
 	 * @return Product[] 
 	 */
 	function buildAll(
-			array $manufacturers,
-			array $categories,
-			array $images,
-			array $productManufacturerBinds,
-			array $productCategoryBinds,
-			array $productImageBinds,
-			array $productPrices,
-			array $objects) {
-		
+	array $manufacturers, array $categories, array $images, array $productManufacturerBinds, array $productCategoryBinds, array $productImageBinds, array $productPrices, array $objects) {
+
 		$retval = array();
 		//Задаем имена свойств, выражающих связи: поле со значением родительского элемента и поле со значением дочернего
-		
+
 		$categoryBindParentFieldName = getPropertyNameByNum($productCategoryBinds[0], 1);
 		$categoryBindChildFieldName = getPropertyNameByNum($productCategoryBinds[0], 2);
-		
+
 		$manufacturerBindParentFieldName = getPropertyNameByNum($productManufacturerBinds[0], 1);
 		$manufacturerBindChildFieldName = getPropertyNameByNum($productManufacturerBinds[0], 2);
-		
+
 		$imageBindParentFieldName = getPropertyNameByNum($productImageBinds[0], 1);
 		$imageBindChildFieldName = getPropertyNameByNum($productImageBinds[0], 2);
-		
+
 		$priceProductIdFieldName = getPropertyNameByNum($productPrices[0], 1);
 		$pricePriceFieldName = getPropertyNameByNum($productPrices[0], 3);
-		
-		
+
+
 		foreach ($objects as $object) {
-			if (property_exists($object, 'virtuemart_product_id')
-					&& property_exists($object, 'product_s_desc')
-					&& property_exists($object, 'product_desc')
-					&& property_exists($object, 'product_name')) {
-				
+			if (property_exists($object, 'virtuemart_product_id') && property_exists($object, 'product_s_desc') &&
+					property_exists($object, 'product_desc') && property_exists($object, 'product_name')) {
+
 				$product = new Product($object->virtuemart_product_id);
 
 				$product->name = $object->product_name;
 				$product->shortDescr = strip_tags($object->product_s_desc);
 				$product->fullDescr = preg_replace('/<img.*>/', '', $object->product_desc);
-				if(strpos($product->fullDescr, "<img")){
-					echo 'lol';
-				}
 				
-				if(preg_match('/,\s*\d+\s*(мг|мл|г|гр)\.?/', $product->name, $matches) === 1){
+				if (preg_match('/,\s*\d+\s*(мг|мл|г|гр)\.?/', $product->name, $matches) === 1) {
 //					$product->name = preg_replace('/,\s*\d+\s*(мг|мл|г|гр)\.?/', '', $product->name);
 					$product->weight = str_replace(',', '', $matches[0]);
 				}
-				
+
 				//ищем объект связанной категории
-				$categoryBind = findByProperty($productCategoryBinds, $categoryBindParentFieldName,	$product->id);
-		 		
-				if($categoryBind !== null){
+				$categoryBind = findByProperty($productCategoryBinds, $categoryBindParentFieldName, $product->id);
+
+				if ($categoryBind !== null) {
 					$product->category = findByProperty($categories, 'id', $categoryBind->$categoryBindChildFieldName);
-				}else{
-					echo NOTICE . " товар № {$product->id}: " . NO_CATEGORY. "\n";
+				} else {
+					echo NOTICE . " товар № {$product->id}: " . NO_CATEGORY . "\n";
 				}
-								
+
 				//ищем объект связанного поставщика
-				$manufacturerBind = findByProperty($productManufacturerBinds,$manufacturerBindParentFieldName, $product->id);
-				
-				if($manufacturerBind !== null){
+				$manufacturerBind = findByProperty($productManufacturerBinds, $manufacturerBindParentFieldName, $product->id);
+
+				if ($manufacturerBind !== null) {
 					$product->manufacturer = findByProperty($manufacturers, 'id', $manufacturerBind->$manufacturerBindChildFieldName);
-				}else{
+				} else {
 					echo NOTICE . " товар № {$product->id}: " . NO_MANUFACTURER . "\n";
 				}
-				
+
 				//ищем объекты связанных картинок
 				$imageBinds = findAllByProperty($productImageBinds, $imageBindParentFieldName, $product->id);
-				
-				foreach($imageBinds as $imageBind){
+
+				foreach ($imageBinds as $imageBind) {
 					$product->addImage(findByProperty($images, 'id', $imageBind->$imageBindChildFieldName));
 				}
-				
+
 				//задаем цену продукта
 				$productPrice = findByProperty($productPrices, $priceProductIdFieldName, $product->id);
-				
-				if($productPrice !== null){
+
+				if ($productPrice !== null) {
 					$product->price = $productPrice->$pricePriceFieldName;
 				}
 			}
-			
-			/**
-			 * @todo что делать с полями Product::ingredients, Product::keywords, Product::sale, Product::otherSpecs ???
-			 */
-			
+
 			$retval[] = $product;
 		}
-		
+
 		return $retval;
 	}
+	
+	
 
 }

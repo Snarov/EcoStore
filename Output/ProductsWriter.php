@@ -38,7 +38,7 @@ abstract class ProductsWriter extends Writer {
 			$simpleImage->load("$inDir/{$image->path}");
 			if ($simpleImage->image) {
 				$simpleImage->toSquare();
-				$simpleImage->save("$outDir/" . sprintf("%d-%d%s", $productNum, $index + 1, $extension),$simpleImage->image_type);
+				$simpleImage->save("$outDir/" . sprintf("%d-%d%s", $productNum, $index + 1, $extension), $simpleImage->image_types);
 			}else{
 				echo NOTICE . " {$image->path}: " . IMG_COPY_FAIL . "\n";
 			}

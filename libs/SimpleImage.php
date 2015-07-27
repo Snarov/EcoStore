@@ -91,17 +91,17 @@ class SimpleImage {
 			
 			$new_image = imagecreatetruecolor($size, $size);
 			
-			//делаем рамки прозрачными
+			//добавляем белые (прозрачные) рамки
 			$color = imagecolorallocate($new_image, 255, 255, 255);
 			
 			$retval2 = imagefill($new_image, 0, 0, $color);
-			$retval1 = imagecolortransparent($new_image, $color);
+//			$retval1 = imagecolortransparent($new_image, $color);
 			
 			$dstX = ($size - $this->getWidth()) / 2;
 			$dstY = ($size - $this->getHeight()) / 2;
 
-			imagecopyresampled($new_image, $this->image, $dstX, $dstY, 0, 0, $this->getWidth(), $this->getHeight(),
-					$this->getWidth(), $this->getHeight());
+			imagecopyresampled($new_image, $this->image, $dstX, $dstY, 0, 0, $this->getWidth(), $this->getHeight());
+				
 
 			$this->image = $new_image;
 		}

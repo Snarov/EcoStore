@@ -23,6 +23,50 @@ require_once 'PHPExcel/Style/Fill.php';
 class XLSXWriter extends ProductsWriter {
 
 	const WIDTH_MULTIPLIER = 8;
+	
+	/**
+	 * @var связывает названия категорий naturlife с номерами категорий в ecostore. 
+	 */
+	const CAT_MAP = array(
+	"Для бани, ванны и душа" => 2,
+	"Мыло жидкое" => 2,
+	"Мыло натуральное" => 2,
+	"Волос" => 2,
+	"Для детей" => 4,
+	"Лица" => 2,
+	"Косметические наборы" => 2,
+	"Эфирные масла" => 2,
+	"Мыло авторской работы" => 2,
+	"Классические шампуни" => 2,
+	"Гидролаты" => 2,
+	"Полости рта" => 2,
+	"Тела" => 2,
+	"Косметические масла" => 2,
+	"Мука и масла" => 1,
+	"Дезодоранты BIO" => 2,
+	"Для кухни" => 3,
+	"Для стирки и уборки" => 3,
+	"Для стирки" => 3,
+	"Натуральные освежители воздуха" => 3,
+	"Шампуни и гели для душа «Для всей семьи»" => 2,
+	"Интимная" => 2,
+	"Мыло туалетное" => 2,
+	"Органическая серия косметики Argan" => 2,
+	"Зерна и семена" => 1,
+	"Слинги и слингоодежда" => 8,
+	"Натуральные чаи" => 1,
+	"Кедровая продукция" => 1,
+	"Декоративная косметика" => 2,
+	"Полотенца" => 3,
+	"Детские игрушки" => 4,
+	"Урбеч" => 1,
+	"Шунгит" => 3,
+	"ЗДОРОВОЕ ПИТАНИЕ" => 1,
+	"Для уборки дома" => 3,
+	"Зёрна и семена" => 1,
+	"Специи и приправы" => 1
+		
+);
 
 	/**
 	 * @var определяет стиль заголовка таблицы
@@ -99,7 +143,10 @@ class XLSXWriter extends ProductsWriter {
 		foreach ($products as $index => $product) {
 			$activeSheet->setCellValue('A' . ($index + 2), $index + 1); //Номер товара
 			$activeSheet->setCellValue('B' . ($index + 2), 1); // Тип товара
-			$activeSheet->setCellValue('C' . ($index + 2), $product->category->name); // Категория
+			
+			eval('$category = key_exists($product->category->name, self::CAT_MAP) ? self::CAT_MAP[$product->category->name] :
+																			  $product->category->name;'); //eval() для подавления ложной ошибки netBeans
+			$activeSheet->setCellValue('C' . ($index + 2), $category); // Категория
 			$activeSheet->setCellValue('D' . ($index + 2), sprintf(// Производитель
 							"%s;%s;%s", $product->manufacturer->name, $product->manufacturer->country, $product->manufacturer->url));
 			$activeSheet->setCellValue('E' . ($index + 2), $product->name); // Название 

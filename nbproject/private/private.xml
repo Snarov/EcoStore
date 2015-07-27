@@ -3,15 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/snarov/Work/EcoStore/Output/WriterFactory.php</file>
-            <file>file:/home/snarov/Work/EcoStore/Output/XLSXWriter.php</file>
             <file>file:/home/snarov/Work/EcoStore/EcoStore.php</file>
-            <file>file:/home/snarov/Work/EcoStore/Input/ManufacturerBuilder.php</file>
+            <file>file:/home/snarov/Work/EcoStore/Output/XLSXWriter.php</file>
             <file>file:/home/snarov/Work/EcoStore/Input/ProductBuilder.php</file>
             <file>file:/home/snarov/Work/EcoStore/Output/ProductsWriter.php</file>
-            <file>file:/home/snarov/Work/EcoStore/Entities/Image.php</file>
             <file>file:/home/snarov/Work/EcoStore/libs/SimpleImage.php</file>
-            <file>file:/home/snarov/Work/EcoStore/Entities/Product.php</file>
         </group>
     </open-files>
 </project-private>

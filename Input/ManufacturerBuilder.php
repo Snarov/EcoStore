@@ -27,18 +27,11 @@ class ManufacturerBuilder implements iObjectBuilder {
 
 		foreach ($objects as $object) {
 			if (property_exists($object, 'virtuemart_manufacturer_id') && property_exists($object, 'mf_name') &&
-					property_exists($object, 'mf_url')) {
+					property_exists($object, 'mf_url') && property_exists($object, 'mf_desc')) {
 
-				global $translit;
-
-				if (preg_match('/\([^\W\d]+\)/', $object->slug, $matches) === 1) {
-					$country = $matches[0];
-
-					$country = str_replace(array(')', '('), '', $country);
-					$country = ucwords($country);
-					$country = strtr($country, array_flip($translit));
-
-					$country = strtr($country, array_flip($translit));
+				//вычленяем страну производителя из описания производителя
+				if (preg_match('/Страна\s*:\s*[a-я]+/i', $object->mf_desc, $matches) === 1) {
+					$country = trim(substr($matches[0], strrpos($matches[0], ':') + 1));
 				} else {
 					$country = '';
 				}

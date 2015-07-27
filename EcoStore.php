@@ -48,6 +48,7 @@ use Input\ImageBuilder;
 use Input\ProductBuilder;
 use Output\WriterFactory;
 
+$startTime = time();
 
 /**
  * @global ScriptParams $scriptParams 
@@ -119,5 +120,7 @@ $writer->write($products, $scriptParams->imagesDir, $outImagesDir);
 
 $writer = new Output\DOCXDescWriter($scriptParams->descFileName);
 $writer->writeDesc($products);
+
+echo "Выполнение заняло " . -($startTime - time()) . " секунд\n";
 
 ?>
