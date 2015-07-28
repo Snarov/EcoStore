@@ -121,6 +121,6 @@ $writer->write($products, $scriptParams->imagesDir, $outImagesDir);
 $writer = new Output\DOCXDescWriter($scriptParams->descFileName);
 $writer->writeDesc($products);
 
-echo "Выполнение заняло " . -($startTime - time()) . " секунд\n";
+echo "Выполнение заняло " . -($startTime - time()) . " с.\n";
 
 ?>

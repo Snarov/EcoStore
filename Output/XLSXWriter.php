@@ -25,6 +25,59 @@ class XLSXWriter extends ProductsWriter {
 	const WIDTH_MULTIPLIER = 8;
 	
 	/**
+	 * @var связывает названия категорий naturlife с  типами товаров в ecostore. 
+	 */
+	const TYPE_MAP = array(
+	"Для бани, ванны и душа" => 1,
+	"Мыло жидкое" => 1,
+	"Мыло натуральное" => 1,
+	"Волос" => 1,
+	"Для детей" => 1,
+	"Лица" => 1,
+	"Косметические наборы" => 1,
+	"Эфирные масла" => 1,
+	"Мыло авторской работы" => 1,
+	"Классические шампуни" => 1,
+	"Гидролаты" => 1,
+	"Полости рта" => 1,
+	"Тела" => 1,
+	"Косметические масла" => 1,
+	"Мука и масла" => 2,
+	"Дезодоранты BIO" => 1,
+	"Для кухни" => 1,
+	"Для стирки и уборки" => 1,
+	"Для стирки" => 1,
+	"Натуральные освежители воздуха" => 1,
+	"Шампуни и гели для душа «Для всей семьи»" => 1,
+	"Интимная" => 1,
+	"Мыло туалетное" => 1,
+	"Органическая серия косметики Argan" => 1,
+	"Зерна и семена" => "2,3",
+	"Слинги и слингоодежда" => 1,
+	"Натуральные чаи" => "2,3",
+	"Кедровая продукция" => "1,2",
+	"Декоративная косметика" => 1,
+	"Полотенца" => 1,
+	"Детские игрушки" => 1,
+	"Урбеч" => "2,3",
+	"Шунгит" => 1,
+	"ЗДОРОВОЕ ПИТАНИЕ" => "2,3",
+	"Для уборки дома" => 1,
+	"Зёрна и семена" => "2,3",
+	"Специи и приправы" => "2,3",
+	"Приспособления" => 1,
+	"Подушки" => 1,
+	"Одеяла и пледы" => 1,
+	"Защита от насекомых" => 1,
+	"Мебель" => 1,
+	"Подарки и сувениры" => 1,
+	"Лучшее из Индии" => "1,2,3",
+	"Книги и журналы" => 1,
+	"Для сна и отдыха" => 1
+	
+	);
+	
+	/**
 	 * @var связывает названия категорий naturlife с номерами категорий в ecostore. 
 	 */
 	const CAT_MAP = array(
@@ -67,6 +120,39 @@ class XLSXWriter extends ProductsWriter {
 	"Специи и приправы" => 1
 		
 );
+	
+	/**
+	 * @var связывает названия категорий naturlife с номерами подкатегорий в ecostore. 
+	 */
+	
+	const SUBCAT_MAP = array(
+	"Для бани, ванны и душа" => 14,
+	"Мыло жидкое" => 70,
+	"Мыло натуральное" => 70,
+	"Волос" => 12,
+	"Лица" => 16,
+	"Эфирные масла" => 17,
+	"Мыло авторской работы" => 70,
+	"Классические шампуни" => 12,
+	"Полости рта" => 9,
+	"Тела" => 14,
+	"Косметические масла" => 17,
+	"Мука и масла" => 46,
+	"Дезодоранты BIO" => 24,
+	"Для стирки и уборки" => 68,
+	"Для стирки" => 68,
+	"Натуральные освежители воздуха" => 79,
+	"Шампуни и гели для душа «Для всей семьи»" => 14,
+	"Мыло туалетное" => 70,
+	"Натуральные чаи" => 37,
+	"Для уборки дома" => 80,
+	"Зёрна и семена" => 28,
+	"Зерна и семена" => 28,
+	"Специи и приправы" => 41
+		
+);
+	
+	
 
 	/**
 	 * @var определяет стиль заголовка таблицы
@@ -105,6 +191,7 @@ class XLSXWriter extends ProductsWriter {
 		'Номер товара' => 3.0,
 		'Тип товара' => 2.6,
 		'Категория' => 2.7,
+		'Подкатегория' => 2.7,
 		'Производитель' => 4.0,
 		'Название' => 3.8,
 		'Состав' => 2.1,
@@ -142,19 +229,25 @@ class XLSXWriter extends ProductsWriter {
 		mkdir($imagesOutDir);
 		foreach ($products as $index => $product) {
 			$activeSheet->setCellValue('A' . ($index + 2), $index + 1); //Номер товара
-			$activeSheet->setCellValue('B' . ($index + 2), 1); // Тип товара
+			
+			eval('$type = key_exists($product->category->name, self::TYPE_MAP) ? self::TYPE_MAP[$product->category->name] :
+																			  1;'); //eval() для подавления ложной ошибки netBeans
+			$activeSheet->setCellValue('B' . ($index + 2), $type); // Тип товара
 			
 			eval('$category = key_exists($product->category->name, self::CAT_MAP) ? self::CAT_MAP[$product->category->name] :
 																			  $product->category->name;'); //eval() для подавления ложной ошибки netBeans
 			$activeSheet->setCellValue('C' . ($index + 2), $category); // Категория
-			$activeSheet->setCellValue('D' . ($index + 2), sprintf(// Производитель
+			eval('$subcategory = key_exists($product->category->name, self::SUBCAT_MAP) ? self::SUBCAT_MAP[$product->category->name] :
+																			  "";'); //eval() для подавления ложной ошибки netBeans
+			$activeSheet->setCellValue('D' . ($index + 2), $subcategory); // Подкатегория
+			$activeSheet->setCellValue('E' . ($index + 2), sprintf(// Производитель
 							"%s;%s;%s", $product->manufacturer->name, $product->manufacturer->country, $product->manufacturer->url));
-			$activeSheet->setCellValue('E' . ($index + 2), $product->name); // Название 
-			$activeSheet->setCellValue('F' . ($index + 2), $product->ingredients); // Состав
-			$activeSheet->setCellValue('G' . ($index + 2), $product->shortDescr); // Краткое описание
-			$activeSheet->setCellValue('H' . ($index + 2), $product->keywords); // Ключевые слова
-			$activeSheet->setCellValue('I' . ($index + 2), $product->price); // Цена
-			$activeSheet->setCellValue('J' . ($index + 2), $product->weight); // вес
+			$activeSheet->setCellValue('F' . ($index + 2), $product->name); // Название 
+			$activeSheet->setCellValue('G' . ($index + 2), $product->ingredients); // Состав
+			$activeSheet->setCellValue('H' . ($index + 2), $product->shortDescr); // Краткое описание
+			$activeSheet->setCellValue('I' . ($index + 2), $product->keywords); // Ключевые слова
+			$activeSheet->setCellValue('J' . ($index + 2), $product->price); // Цена
+			$activeSheet->setCellValue('K' . ($index + 2), $product->weight); // вес
 
 			$this->writeImages($product, $index + 1, $imagesInDir, $imagesOutDir);
 			
