@@ -145,6 +145,23 @@ function placeLineBreaks($str, $maxLen) {
 }
 
 /**
+ * Процедура скачивает все картинки из $images на локальную машину. Если картинка существует то она не скачивается
+ * 
+ * @param string $URL папка, в которой лежат скачиваемые картинки
+ * @param string $downloadPath
+ * @param Image[] $images
+ * 
+ */
+function downloadImages($URL, $downloadPath, array $images) {
+	mkdir($downloadPath);
+	foreach ($images as $image) {
+		if (!file_exists($downloadPath . '/' . $image->path)) {
+			copy($URL . '/' . $image->path, $downloadPath . '/' . $image->path);
+		}
+	}
+}
+
+/**
  * Computes base root, base path, and base url.
  * 
  * This code is adapted from Drupal function conf_init, see:
@@ -207,5 +224,4 @@ function htmltodocx_paths() {
 function htmltodocx_valid_http_host($host) {
 	return preg_match('/^\[?(?:[a-z0-9-:\]_]+\.?)+$/', $host);
 }
-
 

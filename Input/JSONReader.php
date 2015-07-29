@@ -1,21 +1,22 @@
 <?php
 
-namespace Input;
 
-require_once 'Reader.php';
 /*
  * ООО "ТК ЭЛЬДОРАДО"
  * Витебск 2015 * 
  * Автор: Снаров И.А.
  */
 
+namespace Input;
+
+require_once 'FileReader.php';
 /**
  * Считывает из файла данные в формате JSON  и формирует из них сырые объекты.
  *
  * @author snarov
  * @package \Input
  */
-class JSONReader extends Reader {
+class JSONReader extends FileReader {
 
 	/**
 	 * Возвращает массив объектов, полученных из JSON файла

@@ -5,9 +5,20 @@
         <group>
             <file>file:/home/snarov/Work/EcoStore/EcoStore.php</file>
             <file>file:/home/snarov/Work/EcoStore/Output/XLSXWriter.php</file>
+
+            <file>file:/home/snarov/Work/EcoStore/AdditionalFuncs.php</file>
+            <file>file:/home/snarov/Work/EcoStore/Input/Reader.php</file>
+            <file>file:/home/snarov/Work/EcoStore/Input/ManufacturerBuilder.php</file>
+
             <file>file:/home/snarov/Work/EcoStore/Input/ProductBuilder.php</file>
+            <file>file:/home/snarov/Work/EcoStore/ScriptParams.php</file>
             <file>file:/home/snarov/Work/EcoStore/Output/ProductsWriter.php</file>
             <file>file:/home/snarov/Work/EcoStore/libs/SimpleImage.php</file>
+
+
+            <file>file:/home/snarov/Work/EcoStore/Input/ImageBuilder.php</file>
+            <file>file:/home/snarov/Work/EcoStore/Input/MySQLReader.php</file>
+
         </group>
     </open-files>
 </project-private>
