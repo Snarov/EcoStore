@@ -22,27 +22,27 @@ abstract class DBReader extends Reader{
 	/**
 	 * @var string 
 	 */
-	private $server;
+	protected $server;
 	
 	/**
 	 * @var string
 	 */
-	private $username;
+	protected $username;
 	
 	/**
 	 * @var string
 	 */
-	private $userPassword;
+	protected $userPassword;
 	
 	/**
 	 * @var string
 	 */
-	private $DBName;
+	protected $DBName;
 	
 	/**
 	 * @var Traversable Представление таблицы из БД
 	 */
-	private $table;
+	protected $table;
 	
 	function __construct($server, $username, $userPassword, $DBName){
 		$this->server = $server;

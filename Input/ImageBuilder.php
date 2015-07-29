@@ -23,8 +23,7 @@ use \Entities\Image;
 class ImageBuilder implements iObjectBuilder {
 
 	public function buildAll(array $objects) {
-		global $imgPath;
-		
+			
 		$retval = array();
 
 		foreach ($objects as $object) {

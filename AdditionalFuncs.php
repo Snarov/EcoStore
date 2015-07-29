@@ -145,6 +145,23 @@ function placeLineBreaks($str, $maxLen) {
 }
 
 /**
+ * Процедура скачивает все картинки из $images на локальную машину. Если картинка существует то она не скачивается
+ * 
+ * @param string $URL папка, в которой лежат скачиваемые картинки
+ * @param string $downloadPath
+ * @param Image[] $images
+ * 
+ */
+function downloadImages($URL, $downloadPath, array $images) {
+	mkdir($downloadPath);
+	foreach ($images as $image) {
+		if (!file_exists($downloadPath . '/' . $image->path)) {
+			copy($URL . '/' . $image->path, $downloadPath . '/' . $image->path);
+		}
+	}
+}
+
+/**
  * Computes base root, base path, and base url.
  * 
  * This code is adapted from Drupal function conf_init, see:
@@ -207,32 +224,3 @@ function htmltodocx_paths() {
 function htmltodocx_valid_http_host($host) {
 	return preg_match('/^\[?(?:[a-z0-9-:\]_]+\.?)+$/', $host);
 }
-
-/**
- * @global array $translit
- * Таблица транслитерации ГОСТ 7.79-2000
- */
-$translit = array(
-	'а' => 'a', 'б' => 'b', 'в' => 'v',
-	'г' => 'g', 'д' => 'd', 'е' => 'e',
-	'ё' => 'yo', 'ж' => 'zh', 'з' => 'z',
-	'и' => 'i', 'й' => 'j', 'к' => 'k',
-	'л' => 'l', 'м' => 'm', 'н' => 'n',
-	'о' => 'o', 'п' => 'p', 'р' => 'r',
-	'с' => 's', 'т' => 't', 'у' => 'u',
-	'ф' => 'f', 'х' => 'x', 'ц' => 'ts',
-	'ч' => 'ch', 'ш' => 'sh', 'щ' => 'shh',
-	'ь' => '\'', 'ы' => 'y', 'ъ' => '\'\'',
-	'э' => 'e\'', 'ю' => 'yu', 'я' => 'ya',
-	'А' => 'A', 'Б' => 'B', 'В' => 'V',
-	'Г' => 'G', 'Д' => 'D', 'Е' => 'E',
-	'Ё' => 'YO', 'Ж' => 'Zh', 'З' => 'Z',
-	'И' => 'I', 'Й' => 'J', 'К' => 'K',
-	'Л' => 'L', 'М' => 'M', 'Н' => 'N',
-	'О' => 'O', 'П' => 'P', 'Р' => 'R',
-	'С' => 'S', 'Т' => 'T', 'У' => 'U',
-	'Ф' => 'F', 'Х' => 'X', 'Ц' => 'C',
-	'Ч' => 'CH', 'Ш' => 'SH', 'Щ' => 'SHH',
-	'Ь' => '\'', 'Ы' => 'Y\'', 'Ъ' => '\'\'',
-	'Э' => 'E\'', 'Ю' => 'YU', 'Я' => 'YA',
-);

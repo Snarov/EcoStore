@@ -8,7 +8,7 @@
 namespace Input;
 
 /**
- * Фабрика объектов-читальщиков
+ * Фабрика объектов-читальщиков из файлов
  *
  * @author snarov
  * @package \Input
@@ -19,7 +19,7 @@ class ReaderFactory {
 	 */
 	const MAP = array(
 		"json" => "JSONReader"
-	);
+		);
 	
 	/**
 	 * Создает объект Reader'а взависимости от типа формата ввода

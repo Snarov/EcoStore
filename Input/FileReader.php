@@ -17,7 +17,7 @@ require_once 'Reader.php';
  * @author snarov
  * @package \Input
  */
-abstract class FileReader extends Readers{
+abstract class FileReader extends Reader{
 		/**
 	 *
 	 * @var string Хранит в себе данные в том виде, в котором они находились в файле
